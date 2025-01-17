@@ -1,0 +1,9 @@
+[
+  {
+    "name": "John Doe",
+    "courseName": "NodeJs",
+    "email": "john.doe@gmail.com",
+    "number": 123456789,
+    "grade": "p"
+  }
+]
