@@ -16,19 +16,27 @@ if(!fs.existsSync(dataFile)) {
 }
 
 app.post('/add-student', (req, res) => {
-    const { name, courseName, email, number, grade = 'p' } = req.body;
+    const studentsToAdd = req.body; 
 
-    if (!name || !courseName || !email || !number) {
-        return res.status(400).json({ error: 'Name, course, email, and number are required.'})
+    if (!Array.isArray(studentsToAdd)) {
+        return res.status(400).json({ error: 'Input should be an array of students.' });
     }
 
-    const newStudent = { name, courseName, email, number, grade };
+    for (const student of studentsToAdd) {
+        const { name, courseName, email, number, grade = 'p'} = student;
 
-    const students = JSON.parse(fs.readFileSync(dataFile));
+        if (!name || !courseName || !email || !number) {
+            return res.status(400).json({
+                error: 'Each student must have a name, courseName, email, and number.'
+            })
+        }
+    }
 
-    students.push(newStudent);
+    const existingStudent = JSON.parse(fs.readFileSync(dataFile));
 
-    fs.writeFileSync(dataFile, JSON.stringify(students, null, 2));
+    existingStudent.push(...studentsToAdd);
+
+    fs.writeFileSync(dataFile, JSON, stringify(existingStudents, null, 2));
 
     res.status(201).json({ message: 'Student added!', student: newStudent })
 });
